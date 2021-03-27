@@ -17,7 +17,7 @@ inject('ctx', async () => {
 inject('pod', async ({ netServer, hub, startup }) => {
   const release = startup.retain()
   const port = process.env.PORT || 8081
-  netServer.listen(port, () => {
+  netServer.listen(port, 'localhost', () => {
     release()
     const { address, port } = netServer.address()
     hub.on('shutdown', () => netServer.terminate())
