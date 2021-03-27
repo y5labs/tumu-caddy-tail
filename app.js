@@ -20,7 +20,9 @@ inject('pod', async ({ netServer, hub, startup }) => {
   netServer.listen(port, 'localhost', () => {
     release()
     const { address, port } = netServer.address()
-    hub.on('shutdown', () => netServer.terminate())
+    hub.on('shutdown', () => new Promise((resolve, reject) => {
+      netServer.close(resolve)
+    }))
     console.log(`${pjson.name}@${pjson.version} ${address}:${port}`)
     if (parentPort)
       parentPort.postMessage(JSON.stringify({ e: 'enable_caddy_logging', p: { port } }))
